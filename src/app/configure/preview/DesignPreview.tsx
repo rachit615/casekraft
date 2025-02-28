@@ -1,7 +1,5 @@
 "use client";
 import React, { useMemo } from "react";
-import { useWindowSize } from "react-use";
-import Confetti from "react-confetti";
 import Phone from "@/components/Phone";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,33 +7,48 @@ import { Configuration } from "@prisma/client";
 import { formatPrice } from "@/lib/utils";
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products";
 import { COLORS, FINISHES, MATERIALS } from "@/app/validators/option-validator";
+import { useMutation } from "@tanstack/react-query";
+import { createCheckoutSession } from "./actions";
+import { toast } from "@/hooks/use-toast";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
-  const { width, height } = useWindowSize();
+  const { isAuthenticated } = useKindeBrowserClient();
 
   console.log("configuration", configuration);
-  const { color, model, material, finish, croppedImageUrl } = configuration;
+  const { color, material, finish, croppedImageUrl } = configuration;
 
   const calculatePrice = useMemo(() => {
-    const materialPrice = PRODUCT_PRICES.material[material];
-    const finishPrice = PRODUCT_PRICES.finish[finish];
+    const materialPrice = PRODUCT_PRICES.material[material!];
+    const finishPrice = PRODUCT_PRICES.finish[finish!];
 
     return BASE_PRICE + materialPrice + finishPrice;
   }, [finish, material]);
 
   const tw = COLORS.find((c) => c.value === color)?.tw;
 
-  console.log("tw", tw);
+  const { mutate: handlePaymentSession } = useMutation({
+    mutationKey: ["handle-checkout-session"],
+    mutationFn: createCheckoutSession,
+  });
+
+  const handleCheckout = () => {
+    if (isAuthenticated) {
+      handlePaymentSession({ configId: configuration.id });
+    } else {
+      toast({
+        title: "Please sign in to checkout",
+        description: "You need to be signed in to checkout",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div>
-      {/* <div aria-hidden="true" className="absolute inset-0">
-        <Confetti width={width} height={height} />
-      </div> */}
-
       <div className="grid grid-cols-12 mt-20 md:gap-x-8 ">
         <div className="sm:col-span-4">
-          <Phone imgSrc={croppedImageUrl} className={`w-60 bg-${tw}`} />
+          <Phone imgSrc={croppedImageUrl!} className={`w-60 bg-${tw}`} />
         </div>
 
         <div className="sm:col-span-8">
@@ -115,7 +128,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
             </div>
 
             <div className="mt-8 flex items-center justify-end pb-12">
-              <Button onClick={() => {}}>Checkout</Button>
+              <Button onClick={handleCheckout}>Checkout</Button>
             </div>
           </div>
         </div>
