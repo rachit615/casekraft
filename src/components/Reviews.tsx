@@ -9,12 +9,12 @@ import { cn } from "@/lib/utils";
 import Phone from "./Phone";
 
 const PHONES = [
-  "/testimonials/1.jpg",
-  "/testimonials/2.jpg",
-  "/testimonials/3.jpg",
-  "/testimonials/4.jpg",
-  "/testimonials/5.jpg",
-  "/testimonials/6.jpg",
+  "/testimonials/7.jpg",
+  "/testimonials/8.jpg",
+  "/testimonials/9.jpg",
+  "/testimonials/10.jpg",
+  "/testimonials/11.jpg",
+  "/testimonials/12.jpg",
 ];
 
 interface ReviewProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -117,10 +117,6 @@ function ReviewsGrid() {
   const column2 = columns[1];
   const column3 = columns[2];
 
-  console.log("column1", column1);
-  console.log("column2", column2);
-  console.log("column3", column3);
-
   return (
     <div
       ref={containerRef}
@@ -150,11 +146,7 @@ function ReviewsGrid() {
             }
             msPerPixel={15}
           />
-          <ReviewColumn
-            reviews={[...column3]}
-            reviewClassName={(reviewIndex) => cn({})}
-            msPerPixel={10}
-          />
+          <ReviewColumn reviews={[...column3]} msPerPixel={10} />
         </>
       ) : null}
     </div>
@@ -164,16 +156,9 @@ function ReviewsGrid() {
 const Reviews = () => {
   return (
     <MaxWidthWrapper className="relative max-w-5xl ">
-      <img
-        aria-hidden="true"
-        src="/what-people-are-buying.png"
-        className="absolute select-none hidden xl:block -left-32 -top-1/3"
-      />
       <ReviewsGrid />
     </MaxWidthWrapper>
   );
 };
 
 export default Reviews;
-
-// you have to put the images such that when in view in mobile app, all images should come with animation
