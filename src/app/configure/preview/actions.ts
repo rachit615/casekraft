@@ -1,3 +1,4 @@
+"use server";
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products";
 import { db } from "@/db";
 import stripe from "@/lib/stripe";
@@ -45,6 +46,8 @@ export async function createCheckoutSession({
       configurationId: configuration.id,
     },
   });
+
+  
 
   if (existingOrder) {
     order = existingOrder;
