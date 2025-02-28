@@ -27,14 +27,14 @@ const Steps = () => {
   const currentPathIndex = STEPS.findIndex((step) =>
     pathname.endsWith(step.url)
   );
-  // pathname = /configure/design
+
   return (
     <ol className="rounded-md bg-white lg:flex lg:rounded-none lg:border-l lg:border-r lg:border-gray-200">
       {STEPS.map((step, index) => {
         const isCurrentStep = pathname.endsWith(step.url);
 
         const isCompleted = index <= currentPathIndex;
-        const imgPath = `/snake-${index + 1}.png`;
+        const imgPath = `/step-${index + 1}.png`;
 
         return (
           <li key={step.name} className="relative overflow-hidden lg:flex-1 ">
